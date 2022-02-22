@@ -28,9 +28,6 @@ namespace TrainTicketSystem
             // Assign our menu properties
             MenuName = menuName;
             Options = options;
-            Console.WriteLine(options);
-            Console.WriteLine(Options);
-
         }
 
         public void BuildMenu()

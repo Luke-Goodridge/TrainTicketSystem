@@ -23,6 +23,7 @@ namespace TrainTicketSystem
             if (trainSize % rowSize != 0) throw new Exception($"Train size ({trainSize}) must divide equally with rowSize ({rowSize}).");
             if (carriageSize % rowSize != 0) throw new Exception($"Carriage size ({carriageSize}) must divide equally with rowSize ({rowSize}).");
             if (trainSize > MAX_TRAIN_SIZE) throw new Exception($"Trainsize ({trainSize}) is too big. Limit is {MAX_TRAIN_SIZE}");
+            // TODO: Add in the ability to only have rows of divisible by 2
 
             // Set properties
             TrainSize = trainSize;
@@ -36,17 +37,26 @@ namespace TrainTicketSystem
         // Print out a nice console view of the seats.
         public void PrintSeatList()
         {
+            //Key for the train seat ascii
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("[XX] = First class seat");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[XX] = Seat already booked\n");
+            Console.ForegroundColor = ConsoleColor.White;
+
+            //Loop through all the seats in the train
             int seatCount = 0;
             foreach (Seat seat in SeatList)
             {
                 //If the seat number is 1 digit, lets add a 0 for formatting
                 string isTakenIndicator = seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString();
 
-                // Recolour the first class seats
+                // Recolour the seat if its taken
                 if (seat.IsTaken)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
+                // Recolour the seat if its first class
                 else if (seat.IsFirstClass)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -54,7 +64,7 @@ namespace TrainTicketSystem
                 else Console.ForegroundColor = ConsoleColor.White;
 
                 // If we reach the end of a row, start a new line
-                if (seatCount % RowSize == 0)
+                if (seatCount % RowSize == 0 && seatCount != 0)
                 {
                     Console.Write($"\n[{isTakenIndicator}]");
                 }
@@ -82,6 +92,7 @@ namespace TrainTicketSystem
         //Setup seats in the train.
         private void SetupSeats()
         {
+            Random random = new Random();
             int firstClassSeatsAssigned = 0;
             bool firstClassRow = false;
 
@@ -105,6 +116,12 @@ namespace TrainTicketSystem
                 else
                 {
                     SeatList[seatNumber] = new Seat(seatNumber);
+                }
+                // For testing sake, lets add a few random seats that are taken already
+                int randomSeatRate = SeatList.Length / 7;
+                if (random.Next(randomSeatRate) == 0)
+                {
+                    SeatList[seatNumber].IsTaken = true;
                 }
             }
         }
