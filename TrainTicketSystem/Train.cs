@@ -39,8 +39,11 @@ namespace TrainTicketSystem
             int seatCount = 0;
             foreach (Seat seat in SeatList)
             {
-                // Check if the seat is taken
-                string isTakenIndicator = !seat.IsTaken ? seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString() : "X";
+                //If the seat number is 1 digit, lets add a 0 for formatting
+                string isTakenIndicator = seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString();
+
+                // Check if the seat is taken - TODO - change this to colours
+                isTakenIndicator = seat.IsTaken ? "X" : isTakenIndicator;
 
                 // Recolour the first class seats
                 Console.ForegroundColor = seat.IsFirstClass ? ConsoleColor.Yellow : ConsoleColor.White;
