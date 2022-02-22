@@ -4,7 +4,7 @@ namespace TrainTicketSystem
 {
     internal class Program
     {
-        static Train train = new Train();
+        static Train train = new Train(60, 15, 3);
         static void Main(string[] args)
         {
             StartTicketProgram();
