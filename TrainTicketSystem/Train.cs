@@ -19,7 +19,7 @@ namespace TrainTicketSystem
         // Constructor for the train seats.
         public Train(int trainSize, int carriageSize, int rowSize)
         {
-            // Check train size is compatible
+            // Check train size is appropriate
             if (trainSize % rowSize != 0) throw new Exception($"Train size ({trainSize}) must divide equally with rowSize ({rowSize}).");
             if (carriageSize % rowSize != 0) throw new Exception($"Carriage size ({carriageSize}) must divide equally with rowSize ({rowSize}).");
             if (trainSize > MAX_TRAIN_SIZE) throw new Exception($"Trainsize ({trainSize}) is too big. Limit is {MAX_TRAIN_SIZE}");
@@ -42,9 +42,10 @@ namespace TrainTicketSystem
                 // Check if the seat is taken
                 string isTakenIndicator = !seat.IsTaken ? seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString() : "X";
 
-                // every Rowlimit, we make a new row of seats
-                if (seat.IsFirstClass) Console.ForegroundColor = ConsoleColor.Yellow;
-                else Console.ForegroundColor = ConsoleColor.White;
+                // Recolour the first class seats
+                Console.ForegroundColor = seat.IsFirstClass ? ConsoleColor.Yellow : ConsoleColor.White;
+
+                // If we reach the end of a row, start a new line
                 if (seatCount % RowSize == 0)
                 {
                     Console.Write($"\n[{isTakenIndicator}]");
@@ -54,11 +55,18 @@ namespace TrainTicketSystem
                     Console.Write($"[{isTakenIndicator}]");
                 }
                 seatCount++;
-                // We seperate out the seat into carriages
+
+                // We seperate out the seats into carriages
                 if (seatCount % CarriageSize == 0)
                 {
+                    string carriageSeperator = "";
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("\n---------");
+                    // Should scale with the rowsize
+                    for (int i = 0; i < RowSize * 4; i++)
+                    {
+                        carriageSeperator = $"{carriageSeperator}-";
+                    }
+                    Console.Write($"\n{carriageSeperator}");
                 }
             }
         }
