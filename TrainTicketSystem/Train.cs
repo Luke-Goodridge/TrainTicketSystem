@@ -106,19 +106,30 @@ namespace TrainTicketSystem
                 {
                     Console.Write($"[{seatNumber}]");
                 }
+                // Add a little label showing the front
+                if (seatCount == RowSize - 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("  <----FRONT");
+                }
                 seatCount++;
 
                 // We seperate out the seats into carriages
-                if (seatCount % CarriageSize == 0)
+                if (seatCount % CarriageSize == 0 && seatCount != TrainSize)
                 {
                     string carriageSeperator = "";
                     Console.ForegroundColor = ConsoleColor.White;
                     // Should scale with the rowsize
-                    for (int i = 0; i < RowSize * 4; i++)
+                    for (int i = 0; i < RowSize * 4 - 4; i++)
                     {
                         carriageSeperator = $"{carriageSeperator}-";
                     }
-                    Console.Write($"\n{carriageSeperator}");
+                    Console.Write($"\n[|{carriageSeperator}|]");
+                }
+                // Add a little label showing the back
+                else if (seatCount == TrainSize)
+                {
+                    Console.WriteLine("  <----BACK");
                 }
             }
         }
