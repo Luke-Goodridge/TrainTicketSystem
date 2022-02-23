@@ -38,7 +38,7 @@ namespace TrainTicketSystem
                         Environment.Exit(1);
                         break;
                     case 1:
-                        train.ShowSeats();
+                        train.ShowSeatBooking();
                         break;
                     case 2:
                         // TODO: Add a ticket price view here.

@@ -8,13 +8,13 @@ namespace TrainTicketSystem
 {
     internal class Train
     {
+        private const int MAX_TRAIN_SIZE = 100;
+
         // Setup various properties for the train
         public Seat[] SeatList { get; set; }
         public int TrainSize { get; }
         public int CarriageSize { get; }
         public int RowSize { get; }
-
-        private const int MAX_TRAIN_SIZE = 100;
 
         // Constructor for the train seats.
         public Train(int trainSize, int carriageSize, int rowSize)
@@ -32,6 +32,40 @@ namespace TrainTicketSystem
 
             // Setup seats
             SetupSeats();
+        }
+
+        //Setup seats in the train.
+        private void SetupSeats()
+        {
+            int firstClassSeatsAssigned = 0;
+
+            SeatList = new Seat[TrainSize];
+            for (int seatNumber = 0; seatNumber < SeatList.Length; seatNumber++)
+            {
+                // Make the first row of each carriage a first class row
+                if (seatNumber % CarriageSize == 0 || firstClassSeatsAssigned > 0)
+                {
+                    SeatList[seatNumber] = new Seat(seatNumber, true);
+
+                    //Now lets make sure to get the following seats on that row
+                    firstClassSeatsAssigned++;
+                    if (firstClassSeatsAssigned == RowSize)
+                    {
+                        firstClassSeatsAssigned = 0;
+                    }
+                }
+                else
+                {
+                    SeatList[seatNumber] = new Seat(seatNumber);
+                }
+                // For testing sake, lets add a few random seats that are taken already
+                Random random = new Random();
+                int randomSeatRate = SeatList.Length / 7;
+                if (random.Next(randomSeatRate) == 0)
+                {
+                    SeatList[seatNumber].IsTaken = true;
+                }
+            }
         }
 
         // Print out a nice console view of the seats.
@@ -89,76 +123,8 @@ namespace TrainTicketSystem
             }
         }
 
-        //Setup seats in the train.
-        private void SetupSeats()
-        {
-            int firstClassSeatsAssigned = 0;
-
-            SeatList = new Seat[TrainSize];
-            for (int seatNumber = 0; seatNumber < SeatList.Length; seatNumber++)
-            {
-                // Make the first row of each carriage a first class row
-                if (seatNumber % CarriageSize == 0 || firstClassSeatsAssigned > 0)
-                {
-                    SeatList[seatNumber] = new Seat(seatNumber, true);
-
-                    //Now lets make sure to get the following seats on that row
-                    firstClassSeatsAssigned++;
-                    if (firstClassSeatsAssigned == RowSize)
-                    {
-                        firstClassSeatsAssigned = 0;
-                    }
-                }
-                else
-                {
-                    SeatList[seatNumber] = new Seat(seatNumber);
-                }
-                // For testing sake, lets add a few random seats that are taken already
-                Random random = new Random();
-                int randomSeatRate = SeatList.Length / 7;
-                if (random.Next(randomSeatRate) == 0)
-                {
-                    SeatList[seatNumber].IsTaken = true;
-                }
-            }
-        }
-
-        //Book seats on the train
-        public void BookSeat(int seatNumber)
-        {
-            //Show the list again
-            Console.Clear();
-            PrintSeatList();
-
-            // Setup a ticket price for the selected seat.
-            Seat selectedSeat = SeatList[seatNumber];
-            float priceOfSeat = Ticket.GetPrice(selectedSeat);
-
-            // Lets show them the price first
-            Console.WriteLine("\n---------------------------------------------------");
-            Console.WriteLine($"The price for seat number {seatNumber} is [£{priceOfSeat}]");
-            if (SeatList[seatNumber].IsFirstClass) Console.WriteLine("(This seat is first class)");
-            Console.WriteLine("---------------------------------------------------");
-            // If they dont want it, lets go back to the seat view.
-            Console.Write($"Do you wish to continue with seat {seatNumber}? (y/n): ");
-            if (Console.ReadLine().ToLower().Equals("n"))
-            {
-                ShowSeats();
-            }
-            // If they do want the seat, confirm their booking
-            SeatList[seatNumber].IsTaken = true;
-            Console.Clear();
-            PrintSeatList();
-            Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
-
-            //return them to the main menu
-            Console.Write("\n\nPress any key to return to the main menu.");
-            Console.ReadKey();
-            Program.ProgramMainMenu();
-        }
-
         // Show a nice view of the seats to the user.
-        public void ShowSeats()
+        public void ShowSeatBooking()
         {
             while (true)
             {
@@ -199,6 +165,40 @@ namespace TrainTicketSystem
                     break;
                 }
             }
+        }
+
+        //Book seats on the train
+        public void BookSeat(int seatNumber)
+        {
+            //Show the list again
+            Console.Clear();
+            PrintSeatList();
+
+            // Setup a ticket price for the selected seat.
+            Seat selectedSeat = SeatList[seatNumber];
+            float priceOfSeat = Ticket.GetPrice(selectedSeat);
+
+            // Lets show them the price first
+            Console.WriteLine("\n---------------------------------------------------");
+            Console.WriteLine($"The price for seat number {seatNumber} is [£{priceOfSeat}]");
+            if (SeatList[seatNumber].IsFirstClass) Console.WriteLine("(This seat is first class)");
+            Console.WriteLine("---------------------------------------------------");
+            // If they dont want it, lets go back to the seat view.
+            Console.Write($"Do you wish to continue with seat {seatNumber}? (y/n): ");
+            if (Console.ReadLine().ToLower().Equals("n"))
+            {
+                ShowSeatBooking();
+            }
+            // If they dont say no, confirm their booking
+            SeatList[seatNumber].IsTaken = true;
+            Console.Clear();
+            PrintSeatList();
+            Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
+
+            //return them to the main menu
+            Console.Write("\n\nPress any key to return to the main menu.");
+            Console.ReadKey();
+            Program.ProgramMainMenu();
         }
     }
 }
