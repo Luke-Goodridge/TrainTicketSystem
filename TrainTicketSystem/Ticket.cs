@@ -12,14 +12,14 @@ namespace TrainTicketSystem
         private const float STANDARD_CLASS_PRICE = 3.99f;
 
         // Get the price of an individual seat
-        public float GetPrice(Seat seat)
+        public static float GetPrice(Seat seat)
         {
             if (seat.IsFirstClass) return FIRST_CLASS_PRICE;
             else return STANDARD_CLASS_PRICE;
         }
 
         // Get all prices.
-        public float[] GetAllTicketPrices
+        public static float[] GetAllTicketPrices
         {
             get
             {

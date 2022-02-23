@@ -49,7 +49,7 @@ namespace TrainTicketSystem
             foreach (Seat seat in SeatList)
             {
                 //If the seat number is 1 digit, lets add a 0 for formatting
-                string isTakenIndicator = seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString();
+                string seatNumber = seat.ID < 10 ? "0" + seat.ID.ToString() : seat.ID.ToString();
 
                 // Recolour the seat if its taken
                 if (seat.IsTaken)
@@ -66,11 +66,11 @@ namespace TrainTicketSystem
                 // If we reach the end of a row, start a new line
                 if (seatCount % RowSize == 0 && seatCount != 0)
                 {
-                    Console.Write($"\n[{isTakenIndicator}]");
+                    Console.Write($"\n[{seatNumber}]");
                 }
                 else
                 {
-                    Console.Write($"[{isTakenIndicator}]");
+                    Console.Write($"[{seatNumber}]");
                 }
                 seatCount++;
 
@@ -92,24 +92,20 @@ namespace TrainTicketSystem
         //Setup seats in the train.
         private void SetupSeats()
         {
-            Random random = new Random();
             int firstClassSeatsAssigned = 0;
-            bool firstClassRow = false;
 
             SeatList = new Seat[TrainSize];
             for (int seatNumber = 0; seatNumber < SeatList.Length; seatNumber++)
             {
                 // Make the first row of each carriage a first class row
-                if (seatNumber % CarriageSize == 0 || firstClassRow)
+                if (seatNumber % CarriageSize == 0 || firstClassSeatsAssigned > 0)
                 {
                     SeatList[seatNumber] = new Seat(seatNumber, true);
 
                     //Now lets make sure to get the following seats on that row
-                    firstClassRow = true;
                     firstClassSeatsAssigned++;
                     if (firstClassSeatsAssigned == RowSize)
                     {
-                        firstClassRow = false;
                         firstClassSeatsAssigned = 0;
                     }
                 }
@@ -118,6 +114,7 @@ namespace TrainTicketSystem
                     SeatList[seatNumber] = new Seat(seatNumber);
                 }
                 // For testing sake, lets add a few random seats that are taken already
+                Random random = new Random();
                 int randomSeatRate = SeatList.Length / 7;
                 if (random.Next(randomSeatRate) == 0)
                 {
@@ -129,23 +126,29 @@ namespace TrainTicketSystem
         //Book seats on the train
         public void BookSeat(int seatNumber)
         {
+            //Show the list again
+            Console.Clear();
+            PrintSeatList();
+
             // Setup a ticket price for the selected seat.
-            Ticket ticket = new Ticket();
             Seat selectedSeat = SeatList[seatNumber];
-            float priceOfSeat = ticket.GetPrice(selectedSeat);
+            float priceOfSeat = Ticket.GetPrice(selectedSeat);
 
             // Lets show them the price first
-            Console.WriteLine($"\n\nThe price for seat number {seatNumber} is [£{priceOfSeat}]\n");
-            if (SeatList[seatNumber].IsFirstClass) Console.WriteLine("(This seat is first class)\n");
-
+            Console.WriteLine("\n---------------------------------------------------");
+            Console.WriteLine($"The price for seat number {seatNumber} is [£{priceOfSeat}]");
+            if (SeatList[seatNumber].IsFirstClass) Console.WriteLine("(This seat is first class)");
+            Console.WriteLine("---------------------------------------------------");
             // If they dont want it, lets go back to the seat view.
-            Console.Write($"Do you wish to continue with seat {seatNumber}? (y/n)");
+            Console.Write($"Do you wish to continue with seat {seatNumber}? (y/n): ");
             if (Console.ReadLine().ToLower().Equals("n"))
             {
                 ShowSeats();
             }
             // If they do want the seat, confirm their booking
             SeatList[seatNumber].IsTaken = true;
+            Console.Clear();
+            PrintSeatList();
             Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
 
             //return them to the main menu
