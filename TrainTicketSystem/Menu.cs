@@ -11,6 +11,8 @@ namespace TrainTicketSystem
         // Types of menu we might have
         public const int MENU_TYPE_NAGIVATION = 0;
         public const int MENU_TYPE_DISPLAY = 1;
+        private int[] supportedMenuTypes = { MENU_TYPE_NAGIVATION,
+                                               MENU_TYPE_DISPLAY };
 
         // Properties
         public string MenuName { get; set; }
@@ -20,15 +22,23 @@ namespace TrainTicketSystem
         //Constructor
         public Menu(string menuName, string[] options, int menuType)
         {
+            // Not a menu type we support?
+            if (!supportedMenuTypes.Contains(menuType))
+            {
+                throw new Exception($"'{menuName}' Menu Type passed into Menu object was not valid. See constants in menu.cs for types.");
+            }
+            // If its a navigation menu, we want the options to have numbers at the start
             if (menuType == MENU_TYPE_NAGIVATION)
             {
                 // Validate the options are appropriate
                 foreach (string option in options)
                 {
+                    // TODO: Get rid of this and generate the numbers string in script, just ask for the base options.
+
                     // Check if the first character of the menu option is a number, othewise throw an exception
                     if (Int32.TryParse(option[0].ToString(), out int menuOptionNumber) == false)
                     {
-                        throw new Exception($"'{option}' must start with a number to indicate what the user should input.");
+                        throw new Exception($"'{option}' must start with a number to indicate what the user should input. as you have chosen a MENU_TYPE_NAGIVATION menu.");
                     }
                 }
             }

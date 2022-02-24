@@ -17,7 +17,7 @@ namespace TrainTicketSystem
             int optionNumber = -1;
 
             // Create the main menu
-            Menu mainMenu = new Menu("Main Menu", new string[] { "1 - SeatMenu", "2 - TicketMenu" }, Menu.MENU_TYPE_NAGIVATION);
+            Menu mainMenu = new("Main Menu", new string[] { "1 - SeatMenu", "2 - TicketMenu" }, Menu.MENU_TYPE_NAGIVATION);
 
             // Show the main menu first
             mainMenu.BuildMenu(mainMenu.MenuType);
@@ -53,7 +53,7 @@ namespace TrainTicketSystem
         private static void TicketPriceMenu()
         {
             int option = -1;
-            Menu ticketMenu = new Menu("Ticket Price Menu", Tickets.GetTicketOptions(), Menu.MENU_TYPE_DISPLAY);
+            Menu ticketMenu = new("Ticket Price Menu", Tickets.GetTicketOptions(), Menu.MENU_TYPE_DISPLAY);
             ticketMenu.BuildMenu(ticketMenu.MenuType);
 
             while (option != 0)
