@@ -160,7 +160,7 @@ namespace TrainTicketSystem
                 // Exit to main menu if they want
                 else if (seatNumber == -1)
                 {
-                    Program.ProgramMainMenu();
+                    Program.MainMenu();
                 }
                 // If the seat is taken, we cant book that one.
                 else if (SeatList[seatNumber].IsTaken)
@@ -187,29 +187,32 @@ namespace TrainTicketSystem
 
             // Setup a ticket price for the selected seat.
             Seat selectedSeat = SeatList[seatNumber];
-            float priceOfSeat = Ticket.GetPrice(selectedSeat);
+            float priceOfSeat = Tickets.GetPrice(selectedSeat);
 
             // Lets show them the price first
             Console.WriteLine("\n---------------------------------------------------");
             Console.WriteLine($"The price for seat number {seatNumber} is [£{priceOfSeat}]");
             if (SeatList[seatNumber].IsFirstClass) Console.WriteLine("(This seat is first class)");
             Console.WriteLine("---------------------------------------------------");
-            // If they dont want it, lets go back to the seat view.
             Console.Write($"Do you wish to continue with seat {seatNumber}? (y/n): ");
-            if (Console.ReadLine().ToLower().Equals("n"))
+            if (Console.ReadLine().ToLower().Equals("y"))
+            {
+                // If they dont say no, confirm their booking
+                SeatList[seatNumber].IsTaken = true;
+                Console.Clear();
+                PrintSeatList();
+                Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
+
+                //return them to the main menu
+                Console.Write("\n\nPress any key to return to the main menu.");
+                Console.ReadKey();
+                Program.MainMenu();
+            }
+            // If they dont want it, lets go back to the seat view.
+            else
             {
                 ShowSeatBooking();
             }
-            // If they dont say no, confirm their booking
-            SeatList[seatNumber].IsTaken = true;
-            Console.Clear();
-            PrintSeatList();
-            Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
-
-            //return them to the main menu
-            Console.Write("\n\nPress any key to return to the main menu.");
-            Console.ReadKey();
-            Program.ProgramMainMenu();
         }
     }
 }
