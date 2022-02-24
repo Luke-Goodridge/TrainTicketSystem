@@ -129,6 +129,7 @@ namespace TrainTicketSystem
                 // Add a little label showing the back
                 else if (seatCount == TrainSize)
                 {
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine("  <----BACK");
                 }
             }
@@ -207,6 +208,8 @@ namespace TrainTicketSystem
                 Console.Write("\n\nPress any key to return to the main menu.");
                 Console.ReadKey();
                 Program.MainMenu();
+
+                //TODO : Maybe we want to give them the option to book another seat here
             }
             // If they dont want it, lets go back to the seat view.
             else
