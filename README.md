@@ -17,3 +17,5 @@ e.g `Train train = new Train(60, 20);`
 <br />
 ![Seat view](/TrainTicketSystem/images/seatView.PNG)
 <br />
+<br />
+Here you can look up a seats price, if its taken (red) then you cant book it. First class seats are also more expensive than normal.
