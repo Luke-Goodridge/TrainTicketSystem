@@ -9,26 +9,30 @@ namespace TrainTicketSystem
     internal class Train
     {
         private const int MAX_TRAIN_SIZE = 100;
+        private const int ROWSIZE = 4;
+        private const int SEATS_PER_ISLE = ROWSIZE / 2;
 
         // Setup various properties for the train
         public Seat[] SeatList { get; set; }
         public int TrainSize { get; }
         public int CarriageSize { get; }
         public int RowSize { get; }
+        public int SeatsPerAisle { get; }
 
         // Constructor for the train seats.
-        public Train(int trainSize, int carriageSize, int rowSize)
+        public Train(int trainSize, int carriageSize)
         {
             // Check train size is appropriate
-            if (trainSize % rowSize != 0) throw new Exception($"Train size ({trainSize}) must divide equally with rowSize ({rowSize}).");
-            if (carriageSize % rowSize != 0) throw new Exception($"Carriage size ({carriageSize}) must divide equally with rowSize ({rowSize}).");
+            if (trainSize % ROWSIZE != 0) throw new Exception($"Train size ({trainSize}) must divide equally with rowSize ({ROWSIZE}).");
+            if (carriageSize % ROWSIZE != 0) throw new Exception($"Carriage size ({carriageSize}) must divide equally with rowSize ({ROWSIZE}).");
             if (trainSize > MAX_TRAIN_SIZE) throw new Exception($"Trainsize ({trainSize}) is too big. Limit is {MAX_TRAIN_SIZE}");
-            // TODO: Add in the ability to only have rows of divisible by 2
+            // TODO: Add in the ability to only have rows of divisible by 4
 
             // Set properties
             TrainSize = trainSize;
             CarriageSize = carriageSize;
-            RowSize = rowSize;
+            RowSize = ROWSIZE;
+            SeatsPerAisle = SEATS_PER_ISLE;
 
             // Setup seats
             SetupSeats();
@@ -40,7 +44,7 @@ namespace TrainTicketSystem
             int firstClassSeatsAssigned = 0;
 
             SeatList = new Seat[TrainSize];
-            for (int seatNumber = 0; seatNumber < SeatList.Length; seatNumber++)
+            for (int seatNumber = 0; seatNumber < TrainSize; seatNumber++)
             {
                 // Make the first row of each carriage a first class row
                 if (seatNumber % CarriageSize == 0 || firstClassSeatsAssigned > 0)
@@ -80,6 +84,9 @@ namespace TrainTicketSystem
 
             //Loop through all the seats in the train
             int seatCount = 0;
+            Console.WriteLine("  /^^^^^^^^^^^^\\");
+            Console.WriteLine(" /--------------\\");
+            Console.WriteLine("/----------------\\");
             foreach (Seat seat in SeatList)
             {
                 //If the seat number is 1 digit, lets add a 0 for formatting
@@ -106,32 +113,11 @@ namespace TrainTicketSystem
                 {
                     Console.Write($"[{seatNumber}]");
                 }
-                // Add a little label showing the front
-                if (seatCount == RowSize - 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("  <----FRONT");
-                }
                 seatCount++;
 
-                // We seperate out the seats into carriages
-                if (seatCount % CarriageSize == 0 && seatCount != TrainSize)
-                {
-                    string carriageSeperator = "";
-                    Console.ForegroundColor = ConsoleColor.White;
-                    // Should scale with the rowsize
-                    for (int i = 0; i < RowSize * 4 - 4; i++)
-                    {
-                        carriageSeperator = $"{carriageSeperator}-";
-                    }
-                    Console.Write($"\n[|{carriageSeperator}|]");
-                }
-                // Add a little label showing the back
-                else if (seatCount == TrainSize)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine("  <----BACK");
-                }
+                // Do some nice formatting to the train view
+                FormatTrainSeatView(seatCount);
+
             }
         }
 
@@ -152,7 +138,7 @@ namespace TrainTicketSystem
                 Console.Write("Which seat would you like to book: ");
 
                 // Check if the number is a valid seat.
-                if (Int32.TryParse(Console.ReadLine(), out int seatNumber) == false || seatNumber < returnToMenu || seatNumber >= TrainSize)
+                if (Int32.TryParse(Console.ReadLine(), out int seatNumber) == false || seatNumber < returnToMenu || seatNumber > TrainSize)
                 {
                     Console.WriteLine("\nThat is not a valid seat number. Press any key to try again.");
                     Console.ReadKey();
@@ -215,6 +201,44 @@ namespace TrainTicketSystem
             else
             {
                 ShowSeatBooking();
+            }
+        }
+
+        private void FormatTrainSeatView(int seatCount)
+        {
+            // Add a little label showing the front
+            if (seatCount == RowSize)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("  <----FRONT");
+            }
+            // Add the aisle
+            else if (seatCount % SeatsPerAisle == 0 && seatCount % RowSize != 0)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("| |");
+            }
+
+            // We seperate out the seats into carriages
+            if (seatCount % CarriageSize == 0 && seatCount != 0 && seatCount != TrainSize)
+            {
+                string carriageSeperator = "";
+                Console.ForegroundColor = ConsoleColor.White;
+                // Should scale with the rowsize
+                for (int i = 0; i < RowSize * RowSize - 1; i++)
+                {
+                    carriageSeperator = $"{carriageSeperator}-";
+                }
+                Console.Write($"\n[|{carriageSeperator}|]");
+            }
+            // Add a little label showing the back
+            else if (seatCount == TrainSize)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("  <----BACK");
+                Console.WriteLine("\\                 /");
+                Console.WriteLine(" \\_______________/");
+
             }
         }
     }

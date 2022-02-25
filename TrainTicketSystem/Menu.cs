@@ -27,21 +27,6 @@ namespace TrainTicketSystem
             {
                 throw new Exception($"'{menuName}' Menu Type passed into Menu object was not valid. See constants in menu.cs for types.");
             }
-            // If its a navigation menu, we want the options to have numbers at the start
-            if (menuType == MENU_TYPE_NAGIVATION)
-            {
-                // Validate the options are appropriate
-                foreach (string option in options)
-                {
-                    // TODO: Get rid of this and generate the numbers string in script, just ask for the base options.
-
-                    // Check if the first character of the menu option is a number, othewise throw an exception
-                    if (Int32.TryParse(option[0].ToString(), out int menuOptionNumber) == false)
-                    {
-                        throw new Exception($"'{option}' must start with a number to indicate what the user should input. as you have chosen a MENU_TYPE_NAGIVATION menu.");
-                    }
-                }
-            }
             // Assign our menu properties
             MenuName = menuName;
             Options = options;
@@ -53,9 +38,9 @@ namespace TrainTicketSystem
             Console.Clear();
             Console.WriteLine($"{MenuName}");
             Console.WriteLine("-------------------\n");
-            foreach (string option in Options)
+            for (int i = 0; i < Options.Length; i++)
             {
-                Console.WriteLine(option);
+                Console.WriteLine("{0} - {1}", i + 1, Options[i]);
             }
             if (menuType == Menu.MENU_TYPE_NAGIVATION) Console.WriteLine("\n0 - Exit program");
             else Console.WriteLine("\n0 - Return to the main menu");

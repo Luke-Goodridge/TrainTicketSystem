@@ -5,7 +5,7 @@ namespace TrainTicketSystem
 {
     internal class Program
     {
-        private static Train train = new Train(75, 25, 5);
+        private static Train train = new Train(60, 20);
 
         static void Main(string[] args)
         {
@@ -17,7 +17,7 @@ namespace TrainTicketSystem
             int optionNumber = -1;
 
             // Create the main menu
-            Menu mainMenu = new("Main Menu", new string[] { "1 - SeatMenu", "2 - TicketMenu" }, Menu.MENU_TYPE_NAGIVATION);
+            Menu mainMenu = new("Main Menu", new string[] { "SeatMenu", "TicketMenu" }, Menu.MENU_TYPE_NAGIVATION);
 
             // Show the main menu first
             mainMenu.BuildMenu(mainMenu.MenuType);
