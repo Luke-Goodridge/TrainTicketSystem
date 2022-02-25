@@ -40,7 +40,8 @@ namespace TrainTicketSystem
             Console.WriteLine("-------------------\n");
             for (int i = 0; i < Options.Length; i++)
             {
-                Console.WriteLine("{0} - {1}", i + 1, Options[i]);
+                if (menuType == Menu.MENU_TYPE_NAGIVATION) Console.WriteLine("{0} - {1}", i + 1, Options[i]);
+                else Console.WriteLine("{0}", Options[i]);
             }
             if (menuType == Menu.MENU_TYPE_NAGIVATION) Console.WriteLine("\n0 - Exit program");
             else Console.WriteLine("\n0 - Return to the main menu");
