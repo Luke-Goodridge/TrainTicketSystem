@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="github images\" />
+    <Folder Include="images\" />
   </ItemGroup>
 
 </Project>
