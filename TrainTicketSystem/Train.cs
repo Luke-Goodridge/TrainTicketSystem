@@ -82,6 +82,9 @@ namespace TrainTicketSystem
             Console.WriteLine("[XX] = Seat already booked\n");
             Console.ForegroundColor = ConsoleColor.White;
 
+            //Show the total wallet amount
+            Console.WriteLine("Total in wallet: {0}\n", Wallet.WalletTotal.ToString("c2")); ; ;
+
             //Loop through all the seats in the train
             int seatCount = 0;
             Console.WriteLine("  /^^^^^^^^^^^^\\");
@@ -185,17 +188,27 @@ namespace TrainTicketSystem
             if (Console.ReadLine().ToLower().Equals("y"))
             {
                 // If they dont say no, confirm their booking
-                SeatList[seatNumber].IsTaken = true;
-                Console.Clear();
-                PrintSeatList();
-                Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
+                // Check they have enough to actually buy the seat
+                if (Wallet.DeductPrice(priceOfSeat) == true)
+                {
+                    SeatList[seatNumber].IsTaken = true;
+                    Console.Clear();
+                    PrintSeatList();
+                    Console.WriteLine($"\n**** Booking confirmed for seat {seatNumber} for £{priceOfSeat} ****");
 
-                //return them to the main menu
-                Console.Write("\n\nPress any key to return to the main menu.");
-                Console.ReadKey();
-                Program.MainMenu();
-
-                //TODO : Maybe we want to give them the option to book another seat here
+                    //return them to the main menu
+                    Console.Write("\n\nEnter -1 to go back to the main menu.\nOtherwise press enter to rebook another seat: ");
+                    if (Console.ReadLine() == "-1")
+                        Program.MainMenu();
+                    else ShowSeatBooking();
+                }
+                else
+                {
+                    Console.WriteLine("\nI'm Afraid you dont have enough in your wallet to book this seat.");
+                    Console.WriteLine("Press any key to pick another seat.");
+                    Console.ReadKey();
+                    ShowSeatBooking();
+                }
             }
             // If they dont want it, lets go back to the seat view.
             else

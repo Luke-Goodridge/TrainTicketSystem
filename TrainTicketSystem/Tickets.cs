@@ -10,7 +10,7 @@ namespace TrainTicketSystem
     {
         // Prices of the tickets, these shouldnt change.
         // Though functionality for an admin to change them might come in future...
-        private const float FIRST_CLASS_PRICE = 9.99f;
+        private const float FIRST_CLASS_PRICE = 13.99f;
         private const float STANDARD_CLASS_PRICE = 3.99f;
         private const float PEAK_TICKET_PRICE = 7.99f;
         private const float OFF_PEAK_TICKET_PRICE = 2.99f;

@@ -6,7 +6,6 @@ namespace TrainTicketSystem
     internal class Program
     {
         private static Train train = new Train(60, 20);
-
         static void Main(string[] args)
         {
             MainMenu();

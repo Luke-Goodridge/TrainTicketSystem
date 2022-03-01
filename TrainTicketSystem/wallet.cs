@@ -8,14 +8,21 @@ namespace TrainTicketSystem
 {
     internal class Wallet
     {
-        private float WalletTotal { get; set; }
-
-        // Let them have 50 in the wallet to begin with
-        public Wallet()
+        // Give the user 50 to spend
+        private static float walletTotal = 50.00f;
+        public static float WalletTotal
         {
-            WalletTotal = 50.00f;
+            get
+            {
+                return walletTotal;
+            }
+            set
+            {
+                walletTotal = value;
+            }
         }
-        public bool DeductPrice(float price)
+
+        public static bool DeductPrice(float price)
         {
             if (WalletTotal - price < 0)
             {
